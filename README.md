@@ -13,8 +13,9 @@ This is a GUI assignment. Please set up a GitHub repo like previous assignments.
  - The user can input a text query. After hitting the search button, the user should see the top 5 most relevant images from the database along with their similarity scores.
  - The user can upload an image query. Again, return the top 5 relevant images along with similarity scores.
  - The user can upload both an image and text query. In this case, the user can enter a value between 0.0 and 1.0 indicating how much to weigh the text query relative to the image query. Again, return the top 5 relevant images along with similarity scores.
+ - The user can choose to use embeddings corresponding to the first k principle components instead of CLIP embeddings for image queries. You can reuse work from this week's lab.
 
-[This video](https://youtu.be/U2Ga0ydCfNA) should clarify the requirements.
+[This video](https://youtu.be/U2Ga0ydCfNA) should clarify the requirements. (This video doesn't include the last requirement, but you should include it.)
 
 **Please complete the Python notebook as a first step. You don't need to hand this in, but it walks you through implementation steps.**
 
