@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        img {
+            max-width: 200px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Search</h1>
+    <form id="searchForm" method="POST" enctype="multipart/form-data" action="/search">
+        <label for="queryType">Select Query Type:</label><br>
+        <select id="queryType" name="query_type" required>
+            <option value="" disabled selected>Select query type</option>
+            <option value="text">Text Query</option>
+            <option value="image">Image Query</option>
+            <option value="combined">Combined Query (Text + Image)</option>
+        </select><br><br>
+    
+        <label for="textQuery">Text Query:</label><br>
+        <input type="text" id="textQuery" name="text_query" placeholder="Enter text query"><br><br>
+    
+        <label for="imageQuery">Image Query:</label><br>
+        <input type="file" id="imageQuery" name="image_query" accept="image/*"><br><br>
+    
+        <label for="weight">Text-to-Image Weight (if combined query):</label><br>
+        <input type="number" id="weight" name="weight" step="0.1" min="0.0" max="1.0" value="0.5"><br><br>
+    
+        <label for="usePCA">Use PCA for Image Query:</label><br>
+        <input type="checkbox" id="usePCA" name="use_pca" value="true"><br><br>
+    
+        <label for="k">Number of Principal Components (k):</label><br>
+        <input type="number" id="k" name="k" min="1" max="50" value="50"><br><br>
+    
+        <button type="submit">Search</button>
+    </form>
+    
+    
+
+    <div class="results" id="results">
+        <h2>Results:</h2>
+        <div id="resultImages"></div>
+    </div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const response = await fetch('/search', {
+                method: 'POST',
+                body: formData,
+            });
+            
+            const results = await response.json();
+            const resultContainer = document.getElementById('resultImages');
+            resultContainer.innerHTML = '';
+
+            if (response.ok) {
+                results.forEach(result => {
+                    const div = document.createElement('div');
+                    const img = document.createElement('img');
+                    const score = document.createElement('p');
+                    img.src = `/${result.file_name}`;
+
+                     // Debug: Log the src to the console
+                    console.log("Image Source:", img.src);
+
+
+                    score.textContent = `Similarity Score: ${result.score.toFixed(2)}`;
+                    div.appendChild(img);
+                    div.appendChild(score);
+                    resultContainer.appendChild(div);
+                });
+            } else {
+                resultContainer.innerHTML = `<p>Error: ${results.error || 'Unknown error occurred'}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
